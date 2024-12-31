@@ -2,7 +2,9 @@ import { BrowserWindow, desktopCapturer, ipcMain, screen } from 'electron'
 
 function getSize() {
     const { size, scaleFactor } = screen.getPrimaryDisplay()
-    return [size.width * scaleFactor, size.height * scaleFactor]
+    // desktopCapturer.getSources 参数必须为整数
+    return [parseInt((size.width * scaleFactor) + ''), parseInt((size.height * scaleFactor) + '')]
+
 }
 
 export function useScreenshot(win: BrowserWindow) {
@@ -16,12 +18,14 @@ export function useScreenshot(win: BrowserWindow) {
             types: ['screen'],
             thumbnailSize: { width, height },
         })
-        for (const source of sources) {
-            if (source.id === 'screen:1:0') {
-                thumbnail = source.thumbnail.toDataURL()
-                break
-            }
-        }
+        // 当不为screen:1:0报错 获取第0个
+        thumbnail = sources[0].thumbnail.toDataURL()
+        // for (const source of sources) {
+        //     if (source.id === 'screen:1:0') {
+        //         thumbnail = source.thumbnail.toDataURL()
+        //         break
+        //     }
+        // }
 
         const allWindows = BrowserWindow.getAllWindows()
         // 遍历窗口通知所有窗口已经打开摄像头

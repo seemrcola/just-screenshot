@@ -68,7 +68,8 @@ function getColor() {
     // 取中心点的像素值
     const x = coord.value.x * ratio
     const y = coord.value.y * ratio
-    const i = (y * imgData.width + x) * 4
+    // 当电脑宽高像素比 比较高的时候会报错
+    const i = ((y * imgData.width + x) * 4).toFixed(0).toString().slice(0, 3)
     const r = imgData.data[i]
     const g = imgData.data[i + 1]
     const b = imgData.data[i + 2]
