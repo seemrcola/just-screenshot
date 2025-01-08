@@ -4,7 +4,7 @@ import { createApp, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import Screenshot from './components/index.vue'
 import { useHistory } from './composables/state/history'
 import screenState from './composables/state/screen'
-import * as state from './composables/state/tool'
+import state from './composables/state/tool'
 
 let img: HTMLImageElement
 let rect: App<Element>
