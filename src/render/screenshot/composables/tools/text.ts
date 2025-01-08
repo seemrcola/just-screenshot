@@ -1,8 +1,7 @@
-import { useToolsStore } from '../../store'
+import textState from '../state/tool/text'
 import { useUndo } from './undo'
 
 export function useText(canvas: HTMLCanvasElement, svg: SVGElement) {
-    const toolsStore = useToolsStore()
     const undo = useUndo(canvas, svg)
 
     const rect = canvas.getBoundingClientRect()
@@ -56,7 +55,9 @@ export function useText(canvas: HTMLCanvasElement, svg: SVGElement) {
         div.focus()
 
         div.addEventListener('blur', (e) => {
-            const textContent = (e.target as HTMLDivElement).innerText
+            const textContent = (e.target as HTMLDivElement).textContent
+            if (!textContent)
+                return
             // 去掉空格和换行符
             const t = textContent.replace(/\s+/g, ' ').replace(/[\n\r]/g, '')
             if (t === '') {
@@ -89,11 +90,11 @@ export function useText(canvas: HTMLCanvasElement, svg: SVGElement) {
     }
 
     function getColor() {
-        return toolsStore.textColor
+        return textState.textColor
     }
 
     function getSize() {
-        const size = toolsStore.textSize
+        const size = textState.textSize
         if (size === 'small')
             return 12
 

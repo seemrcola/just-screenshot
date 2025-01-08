@@ -1,4 +1,4 @@
-import { useToolsStore } from '../../store'
+import arrowState from '../state/tool/arrow'
 import { useDragSVGLine } from './dragSvg'
 import { useUndo } from './undo'
 
@@ -7,7 +7,6 @@ export function useDrawSVGArrow(canvas: HTMLCanvasElement, svg: SVGElement) {
 
     let IDRandom = 0
 
-    const toolsStore = useToolsStore()
     const undo = useUndo(canvas, svg)
     const rect = canvas.getBoundingClientRect()!
 
@@ -82,7 +81,7 @@ export function useDrawSVGArrow(canvas: HTMLCanvasElement, svg: SVGElement) {
         svgArrow.setAttribute('y2', `${y}`)
     }
 
-    function mouseupHandler(event: MouseEvent) {
+    function mouseupHandler() {
         document.removeEventListener('mousemove', mousemoveHandler)
         document.removeEventListener('mouseup', mouseupHandler)
 
@@ -91,7 +90,7 @@ export function useDrawSVGArrow(canvas: HTMLCanvasElement, svg: SVGElement) {
     }
 
     function getColor() {
-        return toolsStore.arrowColor
+        return arrowState.arrowColor
     }
 
     return {

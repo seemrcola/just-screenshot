@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import type { Color } from '../types'
+import type { Color } from '../composables/state/tool/type'
 
 const props = defineProps<{
     color: Color

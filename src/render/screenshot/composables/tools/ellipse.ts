@@ -1,11 +1,10 @@
-import { useToolsStore } from '../../store'
+import ellipseState from '../state/tool/ellipse'
 import { useDragSVGEllipse } from './dragSvg'
 import { useUndo } from './undo'
 
 export function useDrawSVGEllipse(canvas: HTMLCanvasElement, svg: SVGElement) {
     let svgEllipse = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse')
 
-    const toolsStore = useToolsStore()
     const undo = useUndo(canvas, svg)
     const rect = canvas.getBoundingClientRect()!
 
@@ -61,7 +60,7 @@ export function useDrawSVGEllipse(canvas: HTMLCanvasElement, svg: SVGElement) {
         svgEllipse.setAttribute('ry', `${ry}`)
     }
 
-    function mouseupHandler(event: MouseEvent) {
+    function mouseupHandler() {
         document.removeEventListener('mousemove', mousemoveHandler)
         document.removeEventListener('mouseup', mouseupHandler)
 
@@ -78,7 +77,7 @@ export function useDrawSVGEllipse(canvas: HTMLCanvasElement, svg: SVGElement) {
     }
 
     function getColor() {
-        return toolsStore.ellipseColor
+        return ellipseState.ellipseColor
     }
 
     return {

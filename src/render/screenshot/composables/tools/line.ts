@@ -1,4 +1,4 @@
-import { useToolsStore } from '../../store'
+import lineState from '../state/tool/pen'
 import { useDragSVGPolyLine } from './dragSvg'
 import { useUndo } from './undo'
 
@@ -6,7 +6,6 @@ export function useDrawSVGLine(canvas: HTMLCanvasElement, svg: SVGElement) {
     let line = document.createElementNS('http://www.w3.org/2000/svg', 'polyline')
     let innerLine = document.createElementNS('http://www.w3.org/2000/svg', 'polyline')
 
-    const toolsStore = useToolsStore()
     const undo = useUndo(canvas, svg)
     const rect = canvas.getBoundingClientRect()!
     let points: string[] = []
@@ -63,7 +62,7 @@ export function useDrawSVGLine(canvas: HTMLCanvasElement, svg: SVGElement) {
         innerLine.setAttribute('points', `${points.join(' ')}`)
     }
 
-    function mouseupHandler(event: MouseEvent) {
+    function mouseupHandler() {
         document.removeEventListener('mousemove', mousemoveHandler)
         document.removeEventListener('mouseup', mouseupHandler)
         points = []
@@ -82,15 +81,15 @@ export function useDrawSVGLine(canvas: HTMLCanvasElement, svg: SVGElement) {
     }
 
     function getColor() {
-        return toolsStore.penColor
+        return lineState.penColor
     }
 
     function getLineWidth() {
-        if (toolsStore.penSize === 'small')
+        if (lineState.penSize === 'small')
             return 3
-        else if (toolsStore.penSize === 'medium')
+        else if (lineState.penSize === 'medium')
             return 5
-        else if (toolsStore.penSize === 'large')
+        else if (lineState.penSize === 'large')
             return 7
         return 1
     }

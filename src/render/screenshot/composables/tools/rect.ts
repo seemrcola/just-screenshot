@@ -1,11 +1,10 @@
-import { useToolsStore } from '../../store'
+import rectState from '../state/tool/rect'
 import { useDragSVGRect } from './dragSvg'
 import { useUndo } from './undo'
 
 export function useDrawSVGRect(canvas: HTMLCanvasElement, svg: SVGElement) {
     let svgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
 
-    const toolsStore = useToolsStore()
     const undo = useUndo(canvas, svg)
     const rect = canvas.getBoundingClientRect()!
 
@@ -61,7 +60,7 @@ export function useDrawSVGRect(canvas: HTMLCanvasElement, svg: SVGElement) {
         svgRect.setAttribute('ry', '5')
     }
 
-    function mouseupHandler(event: MouseEvent) {
+    function mouseupHandler() {
         document.removeEventListener('mousemove', mousemoveHandler)
         document.removeEventListener('mouseup', mouseupHandler)
         // 如果矩形的宽和高都为0，则删除该矩形
@@ -76,7 +75,7 @@ export function useDrawSVGRect(canvas: HTMLCanvasElement, svg: SVGElement) {
     }
 
     function getColor() {
-        return toolsStore.rectColor
+        return rectState.rectColor
     }
 
     return {

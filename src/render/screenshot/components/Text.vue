@@ -1,6 +1,7 @@
 <script setup lang='ts'>
-import type { Color, Size } from '../types'
-import { useToolsStore } from '../store'
+import type { Color, Size } from '../composables/state/tool/type'
+import state from '../composables/state/tool'
+import textState from '../composables/state/tool/text'
 import BaseColor from './BaseColor.vue'
 import BaseSize from './BaseSize.vue'
 
@@ -8,19 +9,17 @@ const emits = defineEmits<{
     (e: 'text'): void
 }>()
 
-const store = useToolsStore()
-
 function pen() {
-    store.changeShowChoose('Text')
+    state.changeShowChoose('Text')
     emits('text')
 }
 
 function changeSize(size: Size) {
-    store.setTextSize(size)
+    textState.setTextSize(size)
 }
 
 function changeColor(color: Color) {
-    store.setTextColor(color)
+    textState.setTextColor(color)
 }
 </script>
 
@@ -28,14 +27,14 @@ function changeColor(color: Color) {
     <div relative>
         <div
             h-4 w-4 cursor-pointer px-2 py-1 i-mdi:format-text text-light
-            :class="{ 'text-light': !store.showTextChoose, 'text-red': store.showTextChoose }"
+            :class="{ 'text-light': !state.showTextChoose, 'text-red': state.showTextChoose }"
             @mousedown.stop
             @click="pen"
         />
-        <div v-if="store.showTextChoose" class="choose">
-            <BaseSize :size="store.textSize" @change-size="changeSize" />
+        <div v-if="state.showTextChoose" class="choose">
+            <BaseSize :size="textState.textSize" @change-size="changeSize" />
             <div h-4 mx-1 w-2px bg-gray />
-            <BaseColor :color="store.textColor" @change-color="changeColor" />
+            <BaseColor :color="textState.textColor" @change-color="changeColor" />
         </div>
     </div>
 </template>

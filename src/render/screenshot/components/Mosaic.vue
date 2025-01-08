@@ -1,25 +1,24 @@
 <script setup lang='ts'>
-import type { Size } from '../types'
-import { useToolsStore } from '../store'
+import type { Size } from '../composables/state/tool/type'
+import state from '../composables/state/tool'
+import mosaicState from '../composables/state/tool/mosaic'
 import BaseSize from './BaseSize.vue'
 
 const emits = defineEmits<{
     (e: 'mosaic'): void
 }>()
 
-const store = useToolsStore()
-
 function changeType(type: 'light' | 'heavy') {
-    store.setMosaicType(type)
-}
-
-function mosaic() {
-    store.changeShowChoose('Mosaic')
-    emits('mosaic')
+    mosaicState.setMosaicType(type)
 }
 
 function changeSize(size: Size) {
-    store.setMosaicSize(size)
+    mosaicState.setMosaicSize(size)
+}
+
+function mosaic() {
+    state.changeShowChoose('Mosaic')
+    emits('mosaic')
 }
 </script>
 
@@ -27,20 +26,20 @@ function changeSize(size: Size) {
     <div relative>
         <div
             h-4 w-4 cursor-pointer px-2 py-1 i-mingcute:mosaic-line text-light
-            :class="{ 'text-light': !store.showMosaicChoose, 'text-red': store.showMosaicChoose }"
+            :class="{ 'text-light': !state.showMosaicChoose, 'text-red': state.showMosaicChoose }"
             @mousedown.stop
             @click="mosaic"
         />
-        <div v-if="store.showMosaicChoose" class="choose">
-            <BaseSize :size="store.mosaicSize" @change-size="changeSize" />
+        <div v-if="state.showMosaicChoose" class="choose">
+            <BaseSize :size="mosaicState.mosaicSize" @change-size="changeSize" />
             <div h-4 mx-1 w-2px bg-gray />
             <div
-                :class="{ 'bg-orange': store.mosaicType === 'light' }"
+                :class="{ 'bg-orange': mosaicState.mosaicType === 'light' }"
                 i-mingcute:mosaic-line mx-2 text-light text-1.15rem
                 @click="changeType('light')"
             />
             <div
-                :class="{ 'bg-orange': store.mosaicType === 'heavy' }"
+                :class="{ 'bg-orange': mosaicState.mosaicType === 'heavy' }"
                 i-icon-park-outline:mosaic mx-2 text-light
                 @click="changeType('heavy')"
             />

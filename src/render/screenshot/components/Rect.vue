@@ -1,21 +1,20 @@
 <script setup lang='ts'>
-import type { Color } from '../types'
-import { useToolsStore } from '../store'
+import type { Color } from '../composables/state/tool/type'
+import state from '../composables/state/tool'
+import rectState from '../composables/state/tool/rect'
 import BaseColor from './BaseColor.vue'
 
 const emits = defineEmits<{
     (e: 'rect'): void
 }>()
 
-const store = useToolsStore()
-
 function pen() {
-    store.changeShowChoose('Rect')
+    state.changeShowChoose('Rect')
     emits('rect')
 }
 
 function changeColor(color: Color) {
-    store.setRectColor(color)
+    rectState.setRectColor(color)
 }
 </script>
 
@@ -23,11 +22,11 @@ function changeColor(color: Color) {
     <div relative>
         <div
             h-4 w-4 cursor-pointer px-2 py-1 i-material-symbols:rectangle-outline-rounded text-light
-            :class="{ 'text-light': !store.showRectChoose, 'text-red': store.showRectChoose }" @mousedown.stop
+            :class="{ 'text-light': !state.showRectChoose, 'text-red': state.showRectChoose }" @mousedown.stop
             @click="pen"
         />
-        <div v-if="store.showRectChoose" class="choose">
-            <BaseColor :color="store.rectColor" @change-color="changeColor" />
+        <div v-if="state.showRectChoose" class="choose">
+            <BaseColor :color="rectState.rectColor" @change-color="changeColor" />
         </div>
     </div>
 </template>

@@ -1,9 +1,8 @@
 <script setup lang='ts'>
 import { onMounted, onUnmounted, ref } from 'vue'
-import { useScreenshotStore } from '../store'
+import screenState from '../composables/state/screen'
 
-const store = useScreenshotStore()
-const imgID = store.imgID
+const imgID = screenState.imgID
 
 const coord = ref({ x: 0, y: 0 })
 const color = ref('')
@@ -62,7 +61,7 @@ function magnifying(canvas: HTMLCanvasElement) {
 }
 
 function getColor() {
-    const imgData = store.imgData
+    const imgData = screenState.imgData
     if (!imgData)
         return
     // 取中心点的像素值

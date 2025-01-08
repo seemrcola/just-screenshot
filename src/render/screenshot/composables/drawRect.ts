@@ -2,7 +2,7 @@ import type { Ref } from 'vue'
 import type { Mode } from '../types'
 import { createApp, ref } from 'vue'
 import Coord from '../components/Coord.vue'
-import { useScreenshotStore } from '../store'
+import screenState from './state/screen'
 import { useCanvas } from './utils'
 
 export function useDrawRect(
@@ -18,15 +18,12 @@ export function useDrawRect(
     let coordComponent: ReturnType<typeof createApp> | null = null
     let coordBox: HTMLElement | null = null
 
-    const store = useScreenshotStore()
-
     function startDraw() {
         document.addEventListener('mousedown', mousedownHanlder)
         drawCoord()
     }
 
     function mousedownHanlder(e: MouseEvent) {
-        console.log('----------------mousedown')
         startFlag.value = true
         start = {
             x: e.pageX,
@@ -44,15 +41,11 @@ export function useDrawRect(
         if (mode.value !== 'draw')
             return
 
-        console.log('mousemove', '我是draw，我在执行')
-
         const { abs } = Math
         const { pageX, pageY } = e
 
         const width = abs(pageX - start.x)
         const height = abs(pageY - start.y)
-        console.log(start.x, start.y, pageX, pageY)
-        console.log('width', width, 'height', height)
         const x = Math.min(start.x, pageX)
         const y = Math.min(start.y, pageY)
 
@@ -61,10 +54,10 @@ export function useDrawRect(
         rectDOM.style.left = `${x}px`
         rectDOM.style.top = `${y}px`
 
-        useCanvas(screenshot, { x, y, height, width }, store.imgID)
+        useCanvas(screenshot, { x, y, height, width }, screenState.imgID)
     }
 
-    function mouseupHanlder(e: MouseEvent) {
+    function mouseupHanlder() {
         startFlag.value = false
         document.removeEventListener('mousemove', mousemoveHanlder)
         document.removeEventListener('mouseup', mouseupHanlder)

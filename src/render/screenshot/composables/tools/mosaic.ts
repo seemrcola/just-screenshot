@@ -1,8 +1,7 @@
-import { useToolsStore } from '../../store'
+import mosaicState from '../state/tool/mosaic'
 import { useUndo } from './undo'
 
 export function useMosaic(canvas: HTMLCanvasElement, svg: SVGElement) {
-    const store = useToolsStore()
     const undo = useUndo(canvas, svg)
 
     const ratio = window.devicePixelRatio
@@ -55,7 +54,10 @@ export function useMosaic(canvas: HTMLCanvasElement, svg: SVGElement) {
         const imageData = ctx.getImageData(point.x, point.y, size, size)
         const data = imageData.data
 
-        let r = 0; let g = 0; let b = 0; let a = 0
+        let r = 0
+        let g = 0
+        let b = 0
+        let a = 0
         let pixelCount = 0
 
         // 遍历正方形区域内的所有像素
@@ -85,7 +87,7 @@ export function useMosaic(canvas: HTMLCanvasElement, svg: SVGElement) {
         canvas.removeEventListener('mousedown', mousedownHanlder)
     }
 
-    function mousedownHanlder(event: MouseEvent) {
+    function mousedownHanlder() {
         document.addEventListener('mousemove', mousemoveHanlder)
         document.addEventListener('mouseup', mouseupHanlder)
 
@@ -99,9 +101,9 @@ export function useMosaic(canvas: HTMLCanvasElement, svg: SVGElement) {
 
         const mosaicRadius = getMosaicSize()
 
-        if (store.mosaicType === 'heavy')
+        if (mosaicState.mosaicType === 'heavy')
             drawMosaicHeavily({ x, y }, mosaicRadius)
-        if (store.mosaicType === 'light')
+        if (mosaicState.mosaicType === 'light')
             drawMosaicLightly({ x, y }, mosaicRadius)
     }
 
@@ -111,11 +113,11 @@ export function useMosaic(canvas: HTMLCanvasElement, svg: SVGElement) {
     }
 
     function getMosaicSize() {
-        if (store.mosaicSize === 'small')
+        if (mosaicState.mosaicSize === 'small')
             return 24
-        if (store.mosaicSize === 'medium')
+        if (mosaicState.mosaicSize === 'medium')
             return 36
-        if (store.mosaicSize === 'large')
+        if (mosaicState.mosaicSize === 'large')
             return 48
 
         return 24

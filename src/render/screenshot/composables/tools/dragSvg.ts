@@ -1,12 +1,5 @@
 import type { useUndo } from './undo'
 
-export {
-    useDragSVGEllipse,
-    useDragSVGLine,
-    useDragSVGPolyLine,
-    useDragSVGRect,
-}
-
 function useDragSVGLine(
     target: SVGElement,
     parent: SVGElement,
@@ -343,4 +336,11 @@ function useDragSVGRect(
         ele.setAttribute('x', `${x + dx}`)
         ele.setAttribute('y', `${y + dy}`)
     }
+}
+
+export {
+    useDragSVGEllipse,
+    useDragSVGLine,
+    useDragSVGPolyLine,
+    useDragSVGRect,
 }

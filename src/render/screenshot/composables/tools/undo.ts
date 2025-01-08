@@ -1,28 +1,28 @@
-import { useHistoryStore } from '../../store'
+import { useHistory } from '../state/history'
 import { useDragSVGEllipse, useDragSVGLine, useDragSVGPolyLine, useDragSVGRect } from './dragSvg'
 
 export function useUndo(screenshot: HTMLCanvasElement, svg: SVGElement) {
     const ctx = screenshot.getContext('2d')!
     const { width, height } = screenshot
 
-    const historyStore = useHistoryStore()
+    const historyStore = useHistory()
 
     function track() {
         const dataUrl = screenshot.toDataURL()
         const svgData = new XMLSerializer().serializeToString(svg)
-        historyStore.history.push({ canvas: dataUrl, svg: svgData })
+        historyStore.historyStack.push({ canvas: dataUrl, svg: svgData })
     }
 
     function fallback() {
-        historyStore.history.pop()
+        historyStore.historyStack.pop()
     }
 
     function undo() {
-        const top = historyStore.history.top as any
+        const top = historyStore.historyStack.top as any
         if (!top)
             return
 
-        historyStore.history.pop()
+        historyStore.historyStack.pop()
         if (top.canvas) {
             const img = new Image()
             img.onload = () => {

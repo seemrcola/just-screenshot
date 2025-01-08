@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import type { Mode } from '../types'
 import { ref } from 'vue'
-import { useScreenshotStore } from '../store'
+import screenState from './state/screen'
 import { useCanvas } from './utils'
 
 export function useDragRect(
@@ -11,8 +11,6 @@ export function useDragRect(
 ) {
     const startFlag = ref(false)
     let start = { x: 0, y: 0 }
-
-    const store = useScreenshotStore()
 
     function startDrag() {
         rectDOM.addEventListener('mousedown', mousedownHandler)
@@ -30,8 +28,6 @@ export function useDragRect(
             return
         if (mode.value !== 'drag')
             return
-
-        console.log('mousemove', '我是drag , 我在执行')
 
         const { pageX, pageY } = e
         const { x, y } = start
@@ -53,10 +49,10 @@ export function useDragRect(
         rectDOM.style.top = `${newY}px`
 
         start = { x: pageX, y: pageY }
-        useCanvas(screenshot, { x: newX, y: newY, height: rect.height, width: rect.width }, store.imgID)
+        useCanvas(screenshot, { x: newX, y: newY, height: rect.height, width: rect.width }, screenState.imgID)
     }
 
-    function mouseupHandler(e: MouseEvent) {
+    function mouseupHandler() {
         startFlag.value = false
         document.removeEventListener('mousemove', mousemoveHandler)
         document.removeEventListener('mouseup', mouseupHandler)

@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import type { Size } from '../types'
+import type { Size } from '../composables/state/tool/type'
 
 const props = defineProps<{
     size: Size

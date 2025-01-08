@@ -2,7 +2,9 @@
 import type { App } from 'vue'
 import { createApp, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import Screenshot from './components/index.vue'
-import { useHistoryStore, useScreenshotStore, useToolsStore } from './store'
+import { useHistory } from './composables/state/history'
+import screenState from './composables/state/screen'
+import * as state from './composables/state/tool'
 
 let img: HTMLImageElement
 let rect: App<Element>
@@ -17,10 +19,9 @@ function escHandler(event: KeyboardEvent): void {
 
 function backgroundImage(thumbnail: string): void {
     img?.remove()
-    const screenshotStore = useScreenshotStore()
     img = document.createElement('img')
     img.src = thumbnail
-    img.id = screenshotStore.imgID
+    img.id = screenState.imgID
     img.style.cssText = `
     pointer-events: none;
     position: fixed;
@@ -48,8 +49,7 @@ async function getImageData(): Promise<void> {
     if (ctx) {
         ctx.drawImage(img, 0, 0)
         const data = ctx.getImageData(0, 0, canvas.width, canvas.height)
-        const screenshotStore = useScreenshotStore()
-        screenshotStore.imgData = data
+        screenState.imgData = data
     }
 }
 
@@ -77,11 +77,10 @@ window.useScreenshot.onScreenshotClosed(() => {
     const screenshot = document.querySelector('.screenshot-root') as HTMLDivElement
     screenshot.style.backgroundColor = 'rgba(0, 0, 0, 0)'
     // 清除工具栏被激活的功能
-    const toolsStore = useToolsStore()
-    toolsStore.clear()
+    state.clear()
     // 清除历史记录
-    const historyStore = useHistoryStore()
-    historyStore.history.clear()
+    const history = useHistory()
+    history.historyStack.clear()
 })
 
 onMounted(() => window.addEventListener('keydown', escHandler))
